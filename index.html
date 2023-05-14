@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>퍼블리셔 면접연습</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+      *{
+        margin:0;
+        padding:0;
+        box-sizing: border-box;
+        outline: none;
+        font-family:'Noto Sans KR','sans-serif';
+        letter-spacing:-1px;
+      }
+      html,body{
+        width:100%;
+        height:100%;
+        position: relative;
+      }
+      a{color:#e9c46a;}
+      ol,ul{list-style:none}
+      body{background-color:#264653;}
+      textarea{
+        width:100%;
+        height:50%;
+        border:0;
+        background-color:#eee;
+        padding:10px;
+        resize:none;
+        border-radius:5px;
+        margin-bottom:10px;
+      }
+      h1{
+        font-size:20px;
+        text-align:left;
+        font-weight:bold;
+        line-height:1.3;
+      }
+      p {
+        margin: 5px 0;
+        padding: 5px;
+        width: 100%;
+      }
+      label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+      button{background-color:#2a9d8f;border:0;border-radius:5px;padding:10px 0;cursor:pointer;flex:1;color:#fff;opacity:0.7;font-size:16px}
+      button:hover{opacity:1;transform:scale(1.02);transition:all 0.3s ease;}
+      footer{
+        position:fixed;
+        left:50%;
+        bottom:15px;
+        transform:translateX(-50%);
+        text-align:center;
+        color:#fff;
+        line-height:1.25;
+        font-size:14px;
+      }
+      .card {
+        position: fixed;
+        left:50%;
+        top:50%;
+        transform:translate(-50%,-50%);
+        background-color:transparent;
+        border-radius:10px;
+        display:flex;
+        flex-direction:column;
+        padding: 0 0 20px 0;
+        width: 100%;
+        max-width:480px;
+      }
+      .card ul{
+        display:flex;
+      }
+      .card li{
+        flex:1;
+        text-align:center;
+        background-color:#e76f51;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        color:#fff;
+        padding:7px 0;
+        cursor: pointer;
+        opacity:0.5;
+        font-weight:bold;
+      }
+      .card li.active{
+        font-weight:bold;
+        opacity:1;
+      }
+      .content{
+        display:none;
+        background-color:#fff;
+        border:0;
+        outline:none;
+        min-height:300px;
+        padding:10px;
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+      }
+      .content.active{display:block}
+      .info-box{margin:10px 0}
+      .type{
+        background-color: #f4a261;
+        color:#fff;
+        font-weight:bold;
+        font-size:14px;
+        padding:2px 6px;
+        border-radius:3px;
+      }
+      .stars{
+        text-align:center;
+        color:#e9c46a;
+      }
+      .timer-wrap{display:flex;justify-content:center;align-items:center;font-size:32px;gap:7px;font-weight:bold;padding:50px 0 55px}
+      .button-wrap{
+        display:flex;
+        justify-content:space-between;
+        gap:2%;
+      }
+      .answer-area{
+        display:none;
+        position:fixed;
+        left:0;
+        top:0;
+        width:100%;
+        height:100%;
+        padding:50px 20px 20px;
+        background-color:rgba(0, 0, 0, 0.8);
+        z-index:1;
+        line-height:1.3;
+      }
+      .answer-area .button-wrap{display:flex;}
+      .answer-area i{
+        width:30px;
+        height:30px;
+        position:fixed;
+        right:10px;
+        top:10px;
+        font-size:30px;
+        color:#fff;
+      }
+      .question-answer{
+        max-width:480px;
+        margin:0 auto;
+        justify-content:center;
+        align-items:center;
+        color:#fff;
+        line-height:1.6;
+      }
+    </style>
+  </head>
+  <body>
+    <section class="card">
+      <ul>
+        <li class="menu0 active" onclick="activeTab(0)">기술면접</li>
+        <li class="menu1" onclick="activeTab(1)">기타질문</li>
+      </ul>
+      <div class="content content0 active">
+        <h1>Q. <strong id="question"></strong></h1>
+        <div class="info-box">
+          <span id="type" class="type"></span>
+          <span id="stars" class="stars"></span>
+        </div>
+        <textarea cols="30" rows="10" placeholder="자유롭게 답변을 생각해서 적어보거나 실제 면접처럼 답변해보세요."></textarea>
+        <div class="button-wrap">
+          <button onclick="handleClick()">아 잘 모르겠다..</button>
+          <button onclick="fetchQuestion()">다른 문제 보기</button>
+        </div>
+      </div>
+      <div class="content content1">
+        <h1>Q. 1분 자기소개 / 본인의 장단점 / 이직사유 / 팀간 갈등 해결방법 / 상사가 부당한 지시를 내린다면? 중 택1 하여 대답하기</h1>
+        <div>
+          <div class="timer-wrap">
+            <i class="fa-regular fa-clock"></i> <span id="timer">60</span>
+          </div>
+          <div class="button-wrap">
+            <button id="play" onclick="timerOn()">타이머 시작</button>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section id="answerArea" class="answer-area">
+      <i class="fa-solid fa-xmark" onclick="handleClick()"></i>
+      <div id="questionAnswer" class="question-answer"></div>
+    </section>
+    <footer>
+      오타 및 수정사항 문의는<br/>
+      <a href="mailto:plm323@naver.com">plm323@naver.com</a>
+    </footer>
+    <script type="text/javascript">
+      const $stars = document.querySelector('#stars');
+      const $question = document.querySelector("#question");
+      const $questionAnswer = document.querySelector("#questionAnswer");
+      const $answerArea = document.querySelector("#answerArea");
+      const $type = document.querySelector("#type");
+      let play = false;
+      let initTime = 60;
+
+      const fetchQuestion = () => {
+        $stars.innerHTML = '';
+        fetch('data.json')
+        .then(response => response.json())
+        .then(data => {
+          const value = Math.floor(Math.random() * data.length);
+          $question.innerHTML = data[value].title;
+          $questionAnswer.innerHTML = data[value].answer;
+          $type.innerHTML = data[value].type;
+          for(let i=0;i < data[value].stars;i++){
+            const star = document.createElement('span');
+            const emoji = document.createTextNode('⭐');
+            star.appendChild(emoji);
+            $stars.append(star);
+          }
+        })
+        .catch(error => console.error(error));
+      }
+
+      const handleClick = () => {
+        if (!$answerArea.style.display || $answerArea.style.display === 'none') {
+          $answerArea.style.display = 'block';
+        } else {
+          $answerArea.style.display = 'none'
+        }
+      }
+
+      const activeTab = (num) => {
+        document.querySelector('.card ul li.active').classList.remove('active');
+        document.querySelector(`.menu${num}`).classList.add('active');
+        document.querySelector('.content.active').classList.remove('active');
+        document.querySelector(`.content${num}`).classList.add('active');
+      }
+
+      let interval;
+
+      function timer() {
+        if(initTime === 0){
+          clearInterval(interval);
+          play = false;
+          initTime = 60;
+          document.querySelector("#timer").innerText = initTime;
+          document.querySelector("#play").innerText = '타이머 시작';
+          return;
+        }
+        initTime--;
+        document.querySelector("#timer").innerText = initTime;
+      }
+
+
+      const timerOn = () => {      
+        if(play === false){
+          document.querySelector("#play").innerText = '타이머 종료';
+          interval = setInterval(timer, 1000);
+          play = true;
+        }else{
+          initTime = 60;
+          document.querySelector("#timer").innerText = initTime;
+          document.querySelector("#play").innerText = '타이머 시작';
+          clearInterval(interval);
+          play = false;
+        }
+      }
+      
+      fetchQuestion();
+    </script>
+  </body>
+</html>
